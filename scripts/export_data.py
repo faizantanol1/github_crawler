@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Export database to CSV and JSON."""
 
+
 import sys
 import os
 import csv
@@ -15,6 +16,10 @@ from src.utils.logger import setup_logger
 
 logger = setup_logger(__name__)
 
+# Folder to store all exports
+EXPORT_DIR = "repositories"  # You can change this to 'exports' if you prefer
+os.makedirs(EXPORT_DIR, exist_ok=True)  # Create folder if it doesn't exist
+
 def main():
     try:
         with DatabaseConnection() as db:
@@ -25,20 +30,16 @@ def main():
             logger.warning('No repositories to export')
             return
         
-        # Export to CSV
+        # Timestamp for filenames
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        csv_file = f'repositories_{timestamp}.csv'
+
+        # Export to CSV
+        csv_file = os.path.join(EXPORT_DIR, f'repositories_{timestamp}.csv')
         with open(csv_file, 'w', newline='') as f:
             writer = csv.DictWriter(f, fieldnames=repos[0].keys())
             writer.writeheader()
             writer.writerows(repos)
         logger.info(f'Exported {len(repos)} repos to {csv_file}')
-        
-        # Export to JSON
-        json_file = f'repositories_{timestamp}.json'
-        with open(json_file, 'w') as f:
-            json.dump(repos, f, indent=2, default=str)
-        logger.info(f'Exported {len(repos)} repos to {json_file}')
     
     except Exception as e:
         logger.error(f'Export failed: {e}')

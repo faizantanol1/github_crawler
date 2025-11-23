@@ -75,6 +75,7 @@ docs/_build/
 target/
 # my docs
 ARCHITECTURE.md
+repositories
 # Jupyter Notebook
 .ipynb_checkpoints
 
