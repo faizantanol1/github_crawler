@@ -1,10 +1,10 @@
 name: GitHub Crawler
-
 on:
   schedule:
     - cron: '0 0 * * *'  # Daily at midnight UTC
   workflow_dispatch:
-
+  push:
+    branches: [ main ]  # Triggers on push to main
 jobs:
   crawl:
     runs-on: ubuntu-latest
@@ -47,7 +47,7 @@ jobs:
       
       - name: Crawl stars
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
           DB_HOST: localhost
           DB_USER: postgres
           DB_PASSWORD: postgres
@@ -67,4 +67,7 @@ jobs:
         if: always()
         with:
           name: crawler-results
-          path: repositories_*.{csv,json}
+          path: |
+            repositories.csv
+            repositories.json
+            summary.json
