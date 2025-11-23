@@ -67,7 +67,4 @@ jobs:
         if: always()
         with:
           name: crawler-results
-          path: |
-            repositories.csv
-            repositories.json
-            summary.json
+          path: "repositories/*"
